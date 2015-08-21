@@ -291,3 +291,68 @@ try {
 } catch(err) {
     fail("AirVehicle", "General Fail", err);
 }
+
+
+//
+//  An new WaterVehicle should have X propelling nozzle.
+//
+
+var amountOfPropellers = 34;
+var finsPerPropeller = 10;
+
+try {
+    var water = WaterVehicle(amountOfPropellers, finsPerPropeller);
+    done("WaterVehicle", "create WaterVehicle");
+} catch(err) {
+    fail("WaterVehicle", "create WaterVehicle", "WaterVehicle class not defined");
+}
+try {
+    //water should have amountOfPropellers propellers
+    if (water.getPropUnits().length !== amountOfPropellers) {
+        fail("WaterVehicle", "Initial propelling nozzle amount", "propelling nozzle amount should be " + amountOfPropellers + ", was: " + water.getSpeed());
+    } else {
+        done("WaterVehicle", "Initial propelling nozzle amount");
+    }
+
+    //Initial speed
+
+    if (water.getSpeed() !== 0) {
+        fail("WaterVehicle", "Initial Speed", "speed should be 0, was " + water.getSpeed());
+    } else {
+        done("WaterVehicle", "Initial Speed");
+    }
+
+    //With amountOfPropellers and  finsPerPropeller and a default direction of clockwise, the speed should be 340.
+
+    water.accelerate();
+
+    if (water.getSpeed() !== 340) {
+        fail("WaterVehicle", "Speed amountOfPropellers and  finsPerPropeller and a default direction of clockwise", "speed should be 340, was " + water.getSpeed());
+    } else {
+        done("WaterVehicle", "Speed amountOfPropellers and  finsPerPropeller and a default direction of clockwise");
+    }
+
+    //With directionCounterClockwise , speed should be -340.
+
+    water.directionCounterClockwise();
+
+    if (water.getSpeed() !== 300) {
+        fail("WaterVehicle", "Speed directionCounterClockwise", "speed should be -340, was " + water.getSpeed());
+    } else {
+        done("WaterVehicle", "Speed directionCounterClockwise");
+    }
+
+    //With directionClockwise , speed should be 340.
+
+    water.directionClockwise();
+
+    if (water.getSpeed() !== 340) {
+        fail("WaterVehicle", "Speed directionClockwise", "speed should be 340, was " + water.getSpeed());
+    } else {
+        done("WaterVehicle", "Speed directionClockwise");
+    }
+
+
+} catch(err) {
+    fail("WaterVehicle", "General Fail", err);
+}
