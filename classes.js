@@ -96,3 +96,41 @@ function PropellingNozzle(aPower, anAfterburner) {
         getAcceleration : getAcceleration,
     }
 }
+
+function Propeller(aFins, aDirection) {
+    var fins = aFins || 0;
+    var direction = !!aDirection || true;
+
+    function getFins() {
+        return fins;
+    }
+
+    function setFins(aFins) {
+        fins = aFins;
+    }
+
+    function getDirection() {
+        return (direction ? 'clockwise' : 'counter-clockwise');
+    }
+
+    function getAcceleration() {
+        return (direction ? getFins() : -1 * getFins())
+    }
+
+    function directionCounterClockwise() {
+        direction = false;
+    }
+
+    function directionClockwise() {
+        direction =true;
+    }
+
+    return {
+        getFins : getFins,
+        setFins : setFins,
+        getDirection : getDirection,
+        getAcceleration : getAcceleration,
+        directionCounterClockwise : directionCounterClockwise,
+        directionClockwise : directionClockwise,
+    }
+}
