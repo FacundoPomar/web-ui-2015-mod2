@@ -1,42 +1,3 @@
-/**
- * Vehicle constructor function
- * @param float speed     set the speed of the vehicle
- * @param PropulsionUnits Array propUnits array of propulsionUnits to add to the vehicle
- */
-function Vehicle(speed, propUnits) {
-    var speed = speed || 0;
-    var propUnits = propUnits || [];
-
-    function getSpeed() {
-        return speed;
-    }
-
-    function setSpeed(aSpeed) {
-        speed = aSpeed;
-    }
-
-    function getPropUnits() {
-        return propUnits;
-    }
-
-    function addPropUnit(aPropUnit) {
-        propUnits.push(aPropUnit);
-    }
-
-    function accelerate() {
-        for (var i = 0; i < propUnits.length; i++) {
-            speed += propUnits[i].getAcceleration();
-        }
-    }
-
-    return {
-        getSpeed: getSpeed,
-        getPropUnits : getPropUnits,
-        addPropUnit : addPropUnit,
-        accelerate : accelerate,
-    }
-}
-
 function Wheel(aRadius) {
     var radius = aRadius || 0;
 
@@ -133,4 +94,99 @@ function Propeller(aFins, aDirection) {
         directionCounterClockwise : directionCounterClockwise,
         directionClockwise : directionClockwise,
     }
+}
+
+/**
+ * Vehicle constructor function
+ * @param float speed     set the speed of the vehicle
+ * @param PropulsionUnits Array propUnits array of propulsionUnits to add to the vehicle
+ */
+ function Vehicle(speed, propUnits) {
+    var speed = speed || 0;
+    var propUnits = propUnits || [];
+
+    function getSpeed() {
+        return speed;
+    }
+
+    function setSpeed(aSpeed) {
+        speed = aSpeed;
+    }
+
+    function getPropUnits() {
+        return propUnits;
+    }
+
+    function addPropUnit(aPropUnit) {
+        propUnits.push(aPropUnit);
+    }
+
+    function accelerate() {
+        speed = 0;
+        for (var i = 0; i < propUnits.length; i++) {
+            speed += propUnits[i].getAcceleration();
+        }
+    }
+
+    return {
+        getSpeed: getSpeed,
+        getPropUnits : getPropUnits,
+        addPropUnit : addPropUnit,
+        accelerate : accelerate,
+    }
+}
+
+function LandVehicle(aWheelRadius) {
+    var that = Vehicle();
+
+    initialice(aWheelRadius);
+
+    function initialice(aWheelRadius) {
+        //Add wheels
+        for (var i = 0; i < 4; i++) {
+            that.addPropUnit(
+                new Wheel(aWheelRadius)
+                );
+        }
+    }
+
+    return that;
+}
+
+function AirVehicle(aPower) {
+    var that = Vehicle();
+
+    initialice(aPower);
+
+    function initialice(aPower) {
+        that.addPropUnit(
+            new PropellingNozzle(aPower, false)
+            );
+    }
+
+    that.afterBurnersON = function() {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            propUnits[i].afterBurnerON();
+        }
+        that.accelerate();
+    }
+
+    that.afterBurnersOFF = function() {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            propUnits[i].afterBurnerOFF();
+        }
+        that.accelerate();
+    }
+
+    that.setPower = function(aPower) {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            propUnits[i].setPower(aPower);
+        }
+        that.accelerate();
+    }
+
+    return that;
 }
