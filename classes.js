@@ -36,3 +36,63 @@ function Vehicle(speed, propUnits) {
         accelerate : accelerate,
     }
 }
+
+function Wheel(aRadius) {
+    var radius = aRadius || 0;
+
+    function getRadius() {
+        return radius;
+    }
+
+    function setRadius(aRadius) {
+        radius = aRadius;
+    }
+
+    function getAcceleration() {
+        return 2 * getRadius() * Math.PI;
+    }
+
+    return {
+        getRadius : getRadius,
+        setRadius : setRadius,
+        getAcceleration : getAcceleration,
+    }
+}
+
+function PropellingNozzle(aPower, anAfterburner) {
+    var power = aPower || 0;
+    var afterburner = !!anAfterburner || false;
+
+    function getPower() {
+        return power;
+    }
+
+    function setPower(aPower) {
+        power = aPower;
+    }
+
+    function getAfterBurner() {
+        return afterburner;
+    }
+
+    function afterBurnerON() {
+        afterburner = true;
+    }
+
+    function afterBurnerOFF() {
+        afterburner = false;
+    }
+
+    function getAcceleration() {
+        return getPower() * (getAfterBurner() ? 2 : 1);
+    }
+
+    return {
+        getPower : getPower,
+        setPower : setPower,
+        getAfterBurner : getAfterBurner,
+        afterBurnerON : afterBurnerON,
+        afterBurnerOFF : afterBurnerOFF,
+        getAcceleration : getAcceleration,
+    }
+}
