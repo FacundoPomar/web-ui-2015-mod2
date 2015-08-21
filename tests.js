@@ -243,7 +243,7 @@ try {
 }
 try {
     //Land should have 1 propelling nozzle
-    if (air.getPropUnits().length !== 4) {
+    if (air.getPropUnits().length !== 1) {
         fail("AirVehicle", "Initial propelling nozzle amount", "propelling nozzle amount should be 1, was: " + air.getSpeed());
     } else {
         done("AirVehicle", "Initial propelling nozzle amount");
@@ -272,9 +272,9 @@ try {
     air.afterBurnersON();
 
     if (air.getSpeed() !== 300) {
-        fail("AirVehicle", "Initial Speed", "speed should be 300, was " + air.getSpeed());
+        fail("AirVehicle", "Speed afterburners on and 150 of power", "speed should be 300, was " + air.getSpeed());
     } else {
-        done("AirVehicle", "Initial Speed");
+        done("AirVehicle", "Speed afterburners on and 150 of power");
     }
 
     //With afterburners off and 0 of power, speed should be 0.
