@@ -336,7 +336,7 @@ try {
 
     water.directionCounterClockwise();
 
-    if (water.getSpeed() !== 300) {
+    if (water.getSpeed() !== -340) {
         fail("WaterVehicle", "Speed directionCounterClockwise", "speed should be -340, was " + water.getSpeed());
     } else {
         done("WaterVehicle", "Speed directionCounterClockwise");
