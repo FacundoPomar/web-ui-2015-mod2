@@ -102,10 +102,87 @@ try {
     fail("PropellingNozzle", "General Fail", err);
 }
 
+//
+//A new Propeller should have 0 fins and been in clockwise direction
+//
+
+try {
+    var propeller = Propeller();
+    done("Propeller", "create Propeller");
+} catch(err) {
+    fail("Propeller", "create Propeller", "Propeller class not defined");
+}
+
+try {
+    if (propeller.getFins() !== 0) {
+        fail("Propeller", "Initial Fins", "Fins should be 0, was " + propeller.getFins());
+    } else {
+        done("Propeller", "Initial Fins");
+    }
+
+    if (propeller.getDirection() !== "clockwise") {
+        fail("Propeller", "Initial Direction", "Direction should be clockwise, was " + propeller.getDirection());
+    } else {
+        done("Propeller", "Initial Direction");
+    }
 
 
+    if (propeller.getAcceleration() !== 0) {
+        fail("Propeller", "Initial acceleration", "acceleration should be 0, was " + propeller.getAcceleration());
+    } else {
+        done("Propeller", "Initial acceleration");
+    }
 
+    propeller.setFins(10);
+
+
+    //With 10 fins and clockwise direction acceleration should be 10
+
+    if (propeller.getAcceleration() !== 10) {
+        fail("Propeller", "Acceleration fins: 10, direction: clockwise", "Acceleration amount should be 10, was: " + propeller.getAcceleration());
+    } else {
+        done("Propeller", "Acceleration fins: 10, direction: clockwise");
+    }
+
+    propeller.directionCounterClockwise();
+
+    //With 10 fins and counter-clockwise direction acceleration should be -10
+
+    if (propeller.getAcceleration() !== -10) {
+        fail("Propeller", "Acceleration fins: 10, direction: counter-clockwise", "Acceleration amount should be -10, was: " + propeller.getAcceleration());
+    } else {
+        done("Propeller", "Acceleration fins: 10, direction: clockwise");
+    }
+
+    propeller.setFins(0)
+
+    //With 0 fins and counter-clockwise direction acceleration should be 0
+
+    if (propeller.getAcceleration() !== 0) {
+        fail("Propeller", "Acceleration fins: 0, direction: counter-clockwise", "Acceleration amount should be 0, was: " + propeller.getAcceleration());
+    } else {
+        done("Propeller", "Acceleration fins: 10, direction: counter-clockwise");
+    }
+
+    propeller.directionClockwise();
+
+    //With 0 fins and clockwise direction acceleration should be 0
+
+    if (propeller.getAcceleration() !== 0) {
+        fail("Propeller", "Acceleration fins: 0, direction: clockwise", "Acceleration amount should be 0, was: " + propeller.getAcceleration());
+    } else {
+        done("Propeller", "Acceleration fins: 10, direction: clockwise");
+    }
+
+} catch(err) {
+    fail("Propeller", "General Fail", err);
+}
+
+
+//
 //A new vehicle, should have speed 0 at the beginning and 0 propUnits
+//
+
 try {
     var vehicle = Vehicle();
     done("Vehicle", "create Vehicle");
