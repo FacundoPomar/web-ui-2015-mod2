@@ -128,11 +128,16 @@ function Propeller(aFins, aDirection) {
         }
     }
 
+    function stop() {
+        speed = 0;
+    }
+
     return {
         getSpeed: getSpeed,
         getPropUnits : getPropUnits,
         addPropUnit : addPropUnit,
         accelerate : accelerate,
+        stop : stop,
     }
 }
 
@@ -222,4 +227,48 @@ function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller) {
     }
 
     return that;
+}
+
+function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius) {
+    var modes = {};
+    var mode = undefined;
+
+    initialice(amountOfPropellers, finsPerPropeller, wheelsRadius);
+
+    function initialice(amountOfPropellers, finsPerPropeller, wheelsRadius) {
+        modes["water"] = {
+            name : "water",
+            obj : new WaterVehicle(amountOfPropellers, finsPerPropeller),
+        };
+        modes["land"] = {
+            name : "land",
+            obj : new LandVehicle(wheelsRadius),
+        };
+        mode = modes["water"];
+    }
+
+    function getSpeed() {
+        return mode.obj.getSpeed();
+    }
+
+    function switchLand() {
+        mode.obj.stop();
+        mode = modes["land"];
+    }
+
+    function switchWater() {
+        mode.obj.stop();
+        mode = modes["water"];
+    }
+
+    function accelerate() {
+        mode.obj.accelerate();
+    }
+
+    return {
+        getSpeed : getSpeed,
+        switchLand : switchLand,
+        switchWater : switchWater,
+        accelerate : accelerate,
+    };
 }
