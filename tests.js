@@ -242,7 +242,7 @@ try {
     fail("AirVehicle", "create AirVehicle", "AirVehicle class not defined");
 }
 try {
-    //Land should have 1 propelling nozzle
+    //Air should have 1 propelling nozzle
     if (air.getPropUnits().length !== 1) {
         fail("AirVehicle", "Initial propelling nozzle amount", "propelling nozzle amount should be 1, was: " + air.getSpeed());
     } else {
@@ -294,7 +294,7 @@ try {
 
 
 //
-//  An new WaterVehicle should have X propelling nozzle.
+//  A new WaterVehicle should have X propelling nozzle.
 //
 
 var amountOfPropellers = 34;
@@ -355,4 +355,58 @@ try {
 
 } catch(err) {
     fail("WaterVehicle", "General Fail", err);
+}
+
+//
+//  Amphibious Vehicle should change its mode (water and land) and
+//
+
+var amountOfPropellers = 10;
+var finsPerPropeller = 10;
+var wheelsRadius = 6;
+
+try {
+    var amphi = AmphibiousVehicle(
+        amountOfPropellers,
+        finsPerPropeller,
+        wheelsRadius
+        );
+    done("AmphibiousVehicle", "create AmphibiousVehicle");
+} catch(err) {
+    fail("AmphibiousVehicle", "create AmphibiousVehicle", "AmphibiousVehicle class not defined");
+}
+try {
+    if (amphi.getSpeed() !== 0) {
+        fail("WaterVehicle", "Initial Speed", "speed should be 0, was " + amphi.getSpeed());
+    } else {
+        done("WaterVehicle", "Initial Speed");
+    }
+
+    //In land mode, speed should be 37.69911184307752
+
+    // Switch to land mode
+    amphi.switchLand();
+
+    amphi.accelerate();
+
+    if (amphi.getSpeed() !== 37.69911184307752) {
+        fail("WaterVehicle", "Initial Speed", "speed should be 0, was " + amphi.getSpeed());
+    } else {
+        done("WaterVehicle", "Initial Speed");
+    }
+
+    //In Water mode, speed should be 100
+
+    amphi.switchWater();
+
+    amphi.accelerate();
+
+    if (amphi.getSpeed() !== 100) {
+        fail("WaterVehicle", "Initial Speed", "speed should be 0, was " + amphi.getSpeed());
+    } else {
+        done("WaterVehicle", "Initial Speed");
+    }
+
+} catch(err) {
+    fail("AmphibiousVehicle", "General error", err);
 }
