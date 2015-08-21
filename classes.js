@@ -190,3 +190,36 @@ function AirVehicle(aPower) {
 
     return that;
 }
+
+function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller) {
+    var that = Vehicle();
+
+    initialice(anAmountOfPropellers, aFinsPerPropeller);
+
+    function initialice(anAmountOfPropellers, aFinsPerPropeller) {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < anAmountOfPropellers; i++) {
+            that.addPropUnit(
+                new Propeller(aFinsPerPropeller)
+                );
+        }
+    }
+
+    that.directionCounterClockwise = function() {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            propUnits[i].directionCounterClockwise();
+        }
+        that.accelerate();
+    }
+
+    that.directionClockwise = function() {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            propUnits[i].directionClockwise();
+        }
+        that.accelerate();
+    }
+
+    return that;
+}
