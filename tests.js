@@ -200,3 +200,94 @@ if (vehicle.getPropUnits().length !== 0) {
 } else {
     done("Vehicle", "Initial PropUnits amount");
 }
+
+//
+//  A new Land Vehicle should have 4 weels.
+//
+
+try {
+    var land = LandVehicle(4); // parameter radius of wheels
+    done("LandVehicle", "create LandVehicle");
+} catch(err) {
+    fail("LandVehicle", "create LandVehicle", "LandVehicle class not defined");
+}
+try {
+    //Land should have 4 wheels
+    if (land.getPropUnits().length !== 4) {
+        fail("LandVehicle", "Initial wheels amount", "wheels amount should be 4, was: " + land.getSpeed());
+    } else {
+        done("LandVehicle", "Initial wheels amount");
+    }
+    //Having wheels with radius of 4, speed should be (2*4*PI) * 4 wheels -> 100.53096491487338
+
+    land.accelerate();
+
+    if (land.getSpeed() !== 100.53096491487338) {
+        fail("LandVehicle", "Initial Speed", "speed should be 100.53096491487338, was " + land.getSpeed());
+    } else {
+        done("LandVehicle", "Initial Speed");
+    }
+} catch(err) {
+    fail("LandVehicle", "General Fail", err);
+}
+
+//
+//  An new AirVehicle should have 1 propelling nozzle.
+//
+
+try {
+    var air = AirVehicle(150); //parameter, power of the propelling nozzle
+    done("AirVehicle", "create AirVehicle");
+} catch(err) {
+    fail("AirVehicle", "create AirVehicle", "AirVehicle class not defined");
+}
+try {
+    //Land should have 1 propelling nozzle
+    if (air.getPropUnits().length !== 4) {
+        fail("AirVehicle", "Initial propelling nozzle amount", "propelling nozzle amount should be 1, was: " + air.getSpeed());
+    } else {
+        done("AirVehicle", "Initial propelling nozzle amount");
+    }
+
+    //Initial speed
+
+    if (air.getSpeed() !== 0) {
+        fail("AirVehicle", "Initial Speed", "speed should be 0, was " + air.getSpeed());
+    } else {
+        done("AirVehicle", "Initial Speed");
+    }
+
+    //With default afterburners off and 150 of power, the speed should be 150.
+
+    air.accelerate();
+
+    if (air.getSpeed() !== 150) {
+        fail("AirVehicle", "Speed afterburners off and 150 of power", "speed should be 150, was " + air.getSpeed());
+    } else {
+        done("AirVehicle", "Speed afterburners off and 150 of power");
+    }
+
+    //With afterburners on and 150 of power, speed should be 300.
+
+    air.afterBurnersON();
+
+    if (air.getSpeed() !== 300) {
+        fail("AirVehicle", "Initial Speed", "speed should be 300, was " + air.getSpeed());
+    } else {
+        done("AirVehicle", "Initial Speed");
+    }
+
+    //With afterburners off and 0 of power, speed should be 0.
+
+    air.afterBurnersOFF();
+    air.setPower(0);
+
+    if (air.getSpeed() !== 0) {
+        fail("AirVehicle", "Speed afterburners off and 0 of power", "speed should be 0, was " + air.getSpeed());
+    } else {
+        done("AirVehicle", "Speed afterburners off and 0 of power");
+    }
+
+} catch(err) {
+    fail("AirVehicle", "General Fail", err);
+}
