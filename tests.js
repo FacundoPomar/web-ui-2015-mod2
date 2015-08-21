@@ -373,7 +373,7 @@ try {
         );
     done("AmphibiousVehicle", "create AmphibiousVehicle");
 } catch(err) {
-    fail("AmphibiousVehicle", "create AmphibiousVehicle", "AmphibiousVehicle class not defined");
+    fail("AmphibiousVehicle", "create AmphibiousVehicle", "AmphibiousVehicle class not defined" + err);
 }
 try {
     if (amphi.getSpeed() !== 0) {
@@ -389,10 +389,10 @@ try {
 
     amphi.accelerate();
 
-    if (amphi.getSpeed() !== 37.69911184307752) {
-        fail("WaterVehicle", "Initial Speed", "speed should be 0, was " + amphi.getSpeed());
+    if (amphi.getSpeed() !== 150.79644737231007) {
+        fail("WaterVehicle", "Initial land mode", "speed should be 150.79644737231007, was " + amphi.getSpeed());
     } else {
-        done("WaterVehicle", "Initial Speed");
+        done("WaterVehicle", "Initial land mode");
     }
 
     //In Water mode, speed should be 100
@@ -402,7 +402,7 @@ try {
     amphi.accelerate();
 
     if (amphi.getSpeed() !== 100) {
-        fail("WaterVehicle", "Initial Speed", "speed should be 0, was " + amphi.getSpeed());
+        fail("WaterVehicle", "Initial Speed", "speed should be 100, was " + amphi.getSpeed());
     } else {
         done("WaterVehicle", "Initial Speed");
     }
