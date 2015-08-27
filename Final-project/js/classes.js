@@ -25,7 +25,7 @@ function PropellingNozzle(aPower, anAfterburner) {
     var afterburner = !!anAfterburner || false;
 
     function getPower() {
-        return power;
+        return +power;
     }
 
     function setPower(aPower) {
@@ -168,7 +168,7 @@ function LandVehicle(aWheelRadius) {
 function AirVehicle(aPower) {
     var that = Vehicle();
 
-    initialice(aPower);
+    initialice(aPower || 0);
 
     function initialice(aPower) {
         that.addPropUnit(
@@ -198,6 +198,19 @@ function AirVehicle(aPower) {
             propUnits[i].setPower(aPower);
         }
         that.accelerate();
+    }
+
+    that.getPower = function() {
+        var power = 0;
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            power += propUnits[i].getPower();
+        }
+        return power;
+    }
+
+    that.getAfterBurner = function() {
+        return that.getPropUnits()[0].getAfterBurner();
     }
 
     return that;
