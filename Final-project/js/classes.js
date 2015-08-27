@@ -155,6 +155,13 @@ function LandVehicle(aWheelRadius) {
         }
     }
 
+    that.setWheelsRadius = function (aRadius) {
+        var propUnits = that.getPropUnits();
+        for (var i = 0; i < propUnits.length; i++) {
+            propUnits[i].setRadius(aRadius);
+        }
+    }
+
     return that;
 }
 
