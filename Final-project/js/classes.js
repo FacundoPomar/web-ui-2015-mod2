@@ -152,6 +152,7 @@ function LandVehicle(aWheelRadius) {
     initialice(aWheelRadius);
 
     function initialice(aWheelRadius) {
+        that.deletePropUnits();
         //Add wheels
         for (var i = 0; i < 4; i++) {
             that.addPropUnit(
@@ -165,6 +166,10 @@ function LandVehicle(aWheelRadius) {
         for (var i = 0; i < propUnits.length; i++) {
             propUnits[i].setRadius(aRadius);
         }
+    }
+
+    that.reset = function (aRadius) {
+        initialice(aRadius);
     }
 
     return that;
@@ -267,16 +272,16 @@ function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller, aDirection) {
     return that;
 }
 
-function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius) {
+function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius, aDirection) {
     var modes = {};
     var mode = undefined;
 
-    initialice(amountOfPropellers, finsPerPropeller, wheelsRadius);
+    initialice(amountOfPropellers, finsPerPropeller, wheelsRadius, aDirection);
 
-    function initialice(amountOfPropellers, finsPerPropeller, wheelsRadius) {
+    function initialice(amountOfPropellers, finsPerPropeller, wheelsRadius, aDirection) {
         modes["water"] = {
             name : "water",
-            obj : new WaterVehicle(amountOfPropellers, finsPerPropeller),
+            obj : new WaterVehicle(amountOfPropellers, finsPerPropeller, aDirection),
         };
         modes["land"] = {
             name : "land",
@@ -290,12 +295,12 @@ function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius) {
     }
 
     function switchLand() {
-        mode.obj.stop();
+        mode.obj.reset();
         mode = modes["land"];
     }
 
     function switchWater() {
-        mode.obj.stop();
+        mode.obj.reset();
         mode = modes["water"];
     }
 
@@ -303,10 +308,20 @@ function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius) {
         mode.obj.accelerate();
     }
 
+    function getModes() {
+        return modes;
+    }
+
+    function getMode() {
+        return mode;
+    }
+
     return {
         getSpeed : getSpeed,
         switchLand : switchLand,
         switchWater : switchWater,
         accelerate : accelerate,
-    };
+        getModes : getModes,
+        getMode : getMode,
+    }
 }

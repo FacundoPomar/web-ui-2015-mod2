@@ -2,7 +2,7 @@ Number.prototype.toFixedDown = function(digits) {
     var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
     m = this.toString().match(re);
     return m ? parseFloat(m[1]) : this.valueOf();
-};
+}
 
 var currentVehicle = undefined;
 var currentVehicleUI = undefined;
@@ -19,6 +19,10 @@ var vehicles = {
     "water" : {
         "constructor" : WaterVehicle,
         "UI" : WaterVehicleUI,
+    },
+    "amphibious" : {
+        "constructor" : AmphibiousVehicle,
+        "UI" : AmphibiousVehicleUI,
     }
 }
 

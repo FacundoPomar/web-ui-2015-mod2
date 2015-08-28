@@ -293,10 +293,178 @@ function WaterVehicleUI(aWaterVehicle) {
 
         });
 
+}
+
+return {
+    renderControls : renderControls,
+    renderAnimation : renderAnimation,
+}
+}
+
+
+//
+// ##### Amphibious Vehicle  #######
+//
+
+function AmphibiousVehicleUI(anAmphi) {
+    var amphi = anAmphi;
+    var modes = amphi.getModes();
+    var currentMode = amphi.getMode();
+
+    function renderControls(container) {
+        var el = $(container);
+        el.html("<select id='amphi-modes' class='form-control'>" +
+            "<option value='water'>Water Mode</option>" +
+            "<option value='land'>Land Mode</option>" +
+            "</select>");
+
+        var fieldContainer = $("<div></div>", {class : 'amphi-fields'});
+
+        el.append(fieldContainer);
+        console.log(currentMode["name"]);
+        if (currentMode["name"] === "water") {
+            fieldContainer.append($("<label></label>", {
+                text: "Amount of Propellers"
+            }));
+
+            fieldContainer.append($("<input>", {
+                id : 'amounPropellers',
+                type : "number",
+                class : "form-control",
+                html: 0,
+            }));
+
+            fieldContainer.append($("<label></label>", {
+                text: "Fins per Propellers"
+            }));
+
+            fieldContainer.append($("<input>", {
+                id : 'fins',
+                type : "number",
+                class : "form-control",
+                html: 0,
+            }));
+
+            fieldContainer.append($("<label></label>", {
+                text: "Direction"
+            }));
+
+            fieldContainer.append("<select id='propeller-direction' class='form-control'>" +
+                "<option value='clockwise' selected>Clockwise</option>" +
+                "<option value='counter-clockwise'>Counter Clockwise</option>" +
+                "</select>");
+        } else {
+            fieldContainer.append($("<label></label>", {
+                text: "Wheels Radius"
+            }));
+
+            fieldContainer.append($("<input>", {
+                id : 'radiusWheels',
+                type : "number",
+                class : "form-control",
+                text: 0,
+            }));
+        }
+
+        //Set UI current mode
+        $("#amphi-modes").val(currentMode.name);
+
+        setEvents(el);
     }
 
-    return {
-        renderControls : renderControls,
-        renderAnimation : renderAnimation,
+    function renderAnimation(container) {
+        var el = $(container);
+
+        //Get img of vehicle
+        el.html(
+            $(".vehicle-options [vehicle-type='amphibious'] img").clone()
+            )
+        .append(
+            $("<div></div>",
+            {
+                class : "vehicle-info-container",
+            })
+            .append(
+                $("<div></div>", {
+                    class : "vehicle-info",
+                })
+                )
+
+            );
+        refreshInfoBox();
     }
+
+    function refreshInfoBox() {
+        if (currentMode["name"] === "water") {
+            $(".vehicle-info").html("N° Propellers: " + currentMode.obj.getPropUnits().length + "<br />" +
+                "Fins per Propeller: " + currentMode.obj.getFinsPerPropeller() + "<br />" +
+                "Direction: " + currentMode.obj.getDirection() + "<br />" +
+                "Speed: " + currentMode.obj.getSpeed()
+                );
+        } else {
+            $(".vehicle-info").html("<strong>Number of Wheels:</strong> " + currentMode.obj.getPropUnits().length + "<br /> " +
+            "<strong>Speed:</strong> " + currentMode.obj.getSpeed().toFixedDown(2));
+
+        }
+    }
+
+    function setEvents(el) {
+        $(document).ready(function () {
+
+            //Water Mode
+            el.find("#amounPropellers").on("keyup change", function () {
+                var dire = (el.find("#propeller-direction").val() === "clockwise") ? true : false;
+                currentMode.obj.reset($(this).val(), el.find("#fins").val(), dire);
+                currentMode.obj.accelerate();
+                refreshInfoBox();
+            });
+
+            el.find("#fins").on("keyup change", function () {
+                var dire = (el.find("#propeller-direction").val() === "clockwise") ? true : false;
+                currentMode.obj.reset(el.find("#amounPropellers").val(), $(this).val(), dire);
+                currentMode.obj.accelerate();
+                refreshInfoBox();
+            });
+
+            el.find("#propeller-direction").on("change", function () {
+                if ($(this).val() === "clockwise") {
+                    currentMode.obj.directionClockwise();
+                } else {
+                    currentMode.obj.directionCounterClockwise();
+                }
+                refreshInfoBox();
+            })
+
+            el.find("#amphi-modes").on("change", function () {
+                if ($(this).val() !== currentMode.name) {
+                    currentMode.obj.stop();
+                    if ($(this).val() === "land") {
+                        amphi.switchLand();
+                    } else {
+                        amphi.switchWater();
+                    }
+                    currentMode = amphi.getMode();
+                    $(".vehicle-fields").slideUp(function () {
+                        renderControls(".vehicle-fields");
+                        refreshInfoBox();
+                    }).slideDown();
+                    setEvents(el);
+
+                }
+            });
+
+            el.find("#radiusWheels").on("keyup change", function () {
+                currentMode.obj.setWheelsRadius(($(this).val() > 0) ?  $(this).val() : 0);
+                currentMode.obj.accelerate();
+                refreshInfoBox();
+            })
+
+        });
+
+}
+
+return {
+    renderControls : renderControls,
+    renderAnimation : renderAnimation,
+}
 }
