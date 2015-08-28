@@ -266,6 +266,7 @@ function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller, aDirection) {
     }
 
     that.reset = function(amountPropellers, amountFins, aDirection) {
+        console.log(amountPropellers);
         initialice(amountPropellers, amountFins, aDirection);
     }
 
@@ -308,12 +309,32 @@ function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius, a
         mode.obj.accelerate();
     }
 
-    function getModes() {
-        return modes;
+    function getModeName() {
+        return mode.name;
     }
 
-    function getMode() {
-        return mode;
+    function set() {
+        var args = Array.prototype.slice.call(arguments);
+
+        if (args.length > 0) {
+            try {
+                mode.obj[args[0]].apply(this, args.slice(1));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+
+    function get() {
+        var args = Array.prototype.slice.call(arguments);
+
+        if (args.length > 0) {
+            try {
+                return mode.obj[args[0]].apply(this, args.slice(1));
+            } catch (err) {
+                console.error(err);
+            }
+        }
     }
 
     return {
@@ -321,7 +342,8 @@ function AmphibiousVehicle(amountOfPropellers, finsPerPropeller, wheelsRadius, a
         switchLand : switchLand,
         switchWater : switchWater,
         accelerate : accelerate,
-        getModes : getModes,
-        getMode : getMode,
+        getModeName : getModeName,
+        set : set,
+        get : get,
     }
 }
