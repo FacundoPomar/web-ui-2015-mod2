@@ -10,7 +10,7 @@ function Wheel(aRadius) {
     }
 
     function getAcceleration() {
-        return 2 * getRadius() * Math.PI;
+        return +(2 * getRadius() * Math.PI);
     }
 
     return {
@@ -45,7 +45,7 @@ function PropellingNozzle(aPower, anAfterburner) {
     }
 
     function getAcceleration() {
-        return getPower() * (getAfterBurner() ? 2 : 1);
+        return +(getPower() * (getAfterBurner() ? 2 : 1));
     }
 
     return {
@@ -60,7 +60,7 @@ function PropellingNozzle(aPower, anAfterburner) {
 
 function Propeller(aFins, aDirection) {
     var fins = aFins || 0;
-    var direction = !!aDirection || true;
+    var direction = (aDirection === undefined) ? true : !!aDirection;
 
     function getFins() {
         return fins;
@@ -75,7 +75,7 @@ function Propeller(aFins, aDirection) {
     }
 
     function getAcceleration() {
-        return (direction ? getFins() : -1 * getFins())
+        return +(direction ? getFins() : -1 * getFins())
     }
 
     function directionCounterClockwise() {
@@ -106,11 +106,11 @@ function Propeller(aFins, aDirection) {
     var propUnits = propUnits || [];
 
     function getSpeed() {
-        return speed;
+        return +speed;
     }
 
     function setSpeed(aSpeed) {
-        speed = aSpeed;
+        speed = +aSpeed;
     }
 
     function getPropUnits() {
@@ -128,6 +128,10 @@ function Propeller(aFins, aDirection) {
         }
     }
 
+    function deletePropUnits() {
+        propUnits = [];
+    }
+
     function stop() {
         speed = 0;
     }
@@ -138,6 +142,7 @@ function Propeller(aFins, aDirection) {
         addPropUnit : addPropUnit,
         accelerate : accelerate,
         stop : stop,
+        deletePropUnits : deletePropUnits,
     }
 }
 
@@ -216,16 +221,17 @@ function AirVehicle(aPower) {
     return that;
 }
 
-function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller) {
+function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller, aDirection) {
     var that = Vehicle();
 
-    initialice(anAmountOfPropellers, aFinsPerPropeller);
+    initialice(anAmountOfPropellers, aFinsPerPropeller, aDirection);
 
-    function initialice(anAmountOfPropellers, aFinsPerPropeller) {
+    function initialice(anAmountOfPropellers, aFinsPerPropeller, aDirection) {
+        that.deletePropUnits();
         var propUnits = that.getPropUnits();
         for (var i = 0; i < anAmountOfPropellers; i++) {
             that.addPropUnit(
-                new Propeller(aFinsPerPropeller)
+                new Propeller(aFinsPerPropeller, aDirection)
                 );
         }
     }
@@ -244,6 +250,18 @@ function WaterVehicle(anAmountOfPropellers, aFinsPerPropeller) {
             propUnits[i].directionClockwise();
         }
         that.accelerate();
+    }
+
+    that.getFinsPerPropeller = function() {
+        return +((that.getPropUnits().length > 0) ? that.getPropUnits()[0].getFins() : 0)
+    }
+
+    that.getDirection = function() {
+        return ((that.getPropUnits().length > 0) ? that.getPropUnits()[0].getDirection() : "Vehicle off")
+    }
+
+    that.reset = function(amountPropellers, amountFins, aDirection) {
+        initialice(amountPropellers, amountFins, aDirection);
     }
 
     return that;

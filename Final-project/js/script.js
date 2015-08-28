@@ -15,6 +15,10 @@ var vehicles = {
     "air" : {
         "constructor" : AirVehicle,
         "UI" : AirVehicleUI,
+    },
+    "water" : {
+        "constructor" : WaterVehicle,
+        "UI" : WaterVehicleUI,
     }
 }
 

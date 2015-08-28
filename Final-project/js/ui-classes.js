@@ -1,3 +1,7 @@
+//
+// ##### Land Vehicle  #######
+//
+
 function LandVehicleUI(aLandVehicle) {
     var land = aLandVehicle;
 
@@ -63,6 +67,10 @@ function LandVehicleUI(aLandVehicle) {
         renderAnimation : renderAnimation,
     }
 }
+
+//
+// ##### Air Vehicle  #######
+//
 
 function AirVehicleUI(anAirVehicle) {
     var air = anAirVehicle;
@@ -164,26 +172,126 @@ function AirVehicleUI(anAirVehicle) {
                 // console.log(land.getSpeed());
             })
             el.find("[name='afterburner']").on("change", function () {
-                // console.log($(this).val());
-                // $("[name='afterburner']").parent(".active").children().attr("id")
-                // .find("[name='afterburner']").parent(".active").children().attr("id")
+
                 if ($(this).val() === "off") {
                     air.afterBurnersOFF();
                 } else {
                     air.afterBurnersON();
                 }
                 refreshInfoBox();
-                // console.log(land.getSpeed());
             })
 
-            // el.find("#radiusWheels").on("keyup change", function () {
-            //     land.setWheelsRadius(($(this).val() > 0) ?  $(this).val() : 0);
-            //     land.accelerate();
-            //     refreshInfoBox();
-            //     // console.log(land.getSpeed());
-            // })
+        });
 
-    });
+    }
+
+    return {
+        renderControls : renderControls,
+        renderAnimation : renderAnimation,
+    }
+}
+
+//
+// ##### Water Vehicle  #######
+//
+
+function WaterVehicleUI(aWaterVehicle) {
+    var water = aWaterVehicle;
+
+    function renderControls(container) {
+        var el = $(container);
+
+        el.html($("<label></label>", {
+            text: "Amount of Propellers"
+        }));
+
+        el.append($("<input>", {
+            id : 'amounPropellers',
+            type : "number",
+            class : "form-control",
+            html: 0,
+        }));
+
+        el.append($("<label></label>", {
+            text: "Fins per Propellers"
+        }));
+
+        el.append($("<input>", {
+            id : 'fins',
+            type : "number",
+            class : "form-control",
+            html: 0,
+        }));
+
+        el.append($("<label></label>", {
+            text: "Direction"
+        }));
+
+        el.append("<select id='propeller-direction' class='form-control'>" +
+            "<option value='clockwise' selected>Clockwise</option>" +
+            "<option value='counter-clockwise'>Counter Clockwise</option>" +
+            "</select>");
+
+        setEvents(el);
+    }
+
+    function renderAnimation(container) {
+        var el = $(container);
+
+        //Get img of vehicle
+        el.html(
+            $(".vehicle-options [vehicle-type='water'] img").clone()
+            )
+        .append(
+            $("<div></div>",
+            {
+                class : "vehicle-info-container",
+            })
+            .append(
+                $("<div></div>", {
+                    class : "vehicle-info",
+                })
+                )
+
+            );
+        refreshInfoBox();
+    }
+
+    function refreshInfoBox() {
+        $(".vehicle-info").html("N° Propellers: " + water.getPropUnits().length + "<br />" +
+            "Fins per Propeller: " + water.getFinsPerPropeller() + "<br />" +
+            "Direction: " + water.getDirection() + "<br />" +
+            "Speed: " + water.getSpeed()
+            );
+    }
+
+    function setEvents(el) {
+        $(document).ready(function () {
+
+            el.find("#amounPropellers").on("keyup change", function () {
+                var dire = (el.find("#propeller-direction").val() === "clockwise") ? true : false;
+                water.reset($(this).val(), el.find("#fins").val(), dire);
+                water.accelerate();
+                refreshInfoBox();
+            });
+
+            el.find("#fins").on("keyup change", function () {
+                var dire = (el.find("#propeller-direction").val() === "clockwise") ? true : false;
+                water.reset(el.find("#amounPropellers").val(), $(this).val(), dire);
+                water.accelerate();
+                refreshInfoBox();
+            });
+
+            el.find("#propeller-direction").on("change", function () {
+                if ($(this).val() === "clockwise") {
+                    water.directionClockwise();
+                } else {
+                    water.directionCounterClockwise();
+                }
+                refreshInfoBox();
+            })
+
+        });
 
     }
 
