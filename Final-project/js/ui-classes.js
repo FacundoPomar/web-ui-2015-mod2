@@ -308,8 +308,7 @@ return {
 
 function AmphibiousVehicleUI(anAmphi) {
     var amphi = anAmphi;
-    var modes = amphi.getModes();
-    var currentMode = amphi.getMode();
+    var currentMode = amphi.getModeName();
 
     function renderControls(container) {
         var el = $(container);
@@ -321,8 +320,7 @@ function AmphibiousVehicleUI(anAmphi) {
         var fieldContainer = $("<div></div>", {class : 'amphi-fields'});
 
         el.append(fieldContainer);
-        console.log(currentMode["name"]);
-        if (currentMode["name"] === "water") {
+        if (currentMode === "water") {
             fieldContainer.append($("<label></label>", {
                 text: "Amount of Propellers"
             }));
@@ -367,7 +365,7 @@ function AmphibiousVehicleUI(anAmphi) {
         }
 
         //Set UI current mode
-        $("#amphi-modes").val(currentMode.name);
+        $("#amphi-modes").val(currentMode);
 
         setEvents(el);
     }
@@ -395,15 +393,15 @@ function AmphibiousVehicleUI(anAmphi) {
     }
 
     function refreshInfoBox() {
-        if (currentMode["name"] === "water") {
-            $(".vehicle-info").html("N° Propellers: " + currentMode.obj.getPropUnits().length + "<br />" +
-                "Fins per Propeller: " + currentMode.obj.getFinsPerPropeller() + "<br />" +
-                "Direction: " + currentMode.obj.getDirection() + "<br />" +
-                "Speed: " + currentMode.obj.getSpeed()
+        if (currentMode === "water") {
+            $(".vehicle-info").html("N° Propellers: " + amphi.get("getPropUnits").length + "<br />" +
+                "Fins per Propeller: " + amphi.get("getFinsPerPropeller") + "<br />" +
+                "Direction: " + amphi.get("getDirection") + "<br />" +
+                "Speed: " + amphi.get("getSpeed")
                 );
         } else {
-            $(".vehicle-info").html("<strong>Number of Wheels:</strong> " + currentMode.obj.getPropUnits().length + "<br /> " +
-            "<strong>Speed:</strong> " + currentMode.obj.getSpeed().toFixedDown(2));
+            $(".vehicle-info").html("<strong>Number of Wheels:</strong> " + amphi.get("getPropUnits").length + "<br /> " +
+            "<strong>Speed:</strong> " + amphi.get("getSpeed").toFixedDown(2));
 
         }
     }
@@ -414,36 +412,36 @@ function AmphibiousVehicleUI(anAmphi) {
             //Water Mode
             el.find("#amounPropellers").on("keyup change", function () {
                 var dire = (el.find("#propeller-direction").val() === "clockwise") ? true : false;
-                currentMode.obj.reset($(this).val(), el.find("#fins").val(), dire);
-                currentMode.obj.accelerate();
+                amphi.set("reset", $(this).val(), el.find("#fins").val(), dire);
+                amphi.accelerate();
                 refreshInfoBox();
             });
 
             el.find("#fins").on("keyup change", function () {
                 var dire = (el.find("#propeller-direction").val() === "clockwise") ? true : false;
-                currentMode.obj.reset(el.find("#amounPropellers").val(), $(this).val(), dire);
-                currentMode.obj.accelerate();
+                amphi.set("reset", el.find("#amounPropellers").val(), $(this).val(), dire);
+                amphi.accelerate();
                 refreshInfoBox();
             });
 
             el.find("#propeller-direction").on("change", function () {
                 if ($(this).val() === "clockwise") {
-                    currentMode.obj.directionClockwise();
+                    amphi.set("directionClockwise");
                 } else {
-                    currentMode.obj.directionCounterClockwise();
+                    amphi.set("directionCounterClockwise");
                 }
                 refreshInfoBox();
             })
 
             el.find("#amphi-modes").on("change", function () {
-                if ($(this).val() !== currentMode.name) {
-                    currentMode.obj.stop();
+                if ($(this).val() !== currentMode) {
+                    amphi.set("stop");
                     if ($(this).val() === "land") {
                         amphi.switchLand();
                     } else {
                         amphi.switchWater();
                     }
-                    currentMode = amphi.getMode();
+                    currentMode = amphi.getModeName();
                     $(".vehicle-fields").slideUp(function () {
                         renderControls(".vehicle-fields");
                         refreshInfoBox();
@@ -454,8 +452,8 @@ function AmphibiousVehicleUI(anAmphi) {
             });
 
             el.find("#radiusWheels").on("keyup change", function () {
-                currentMode.obj.setWheelsRadius(($(this).val() > 0) ?  $(this).val() : 0);
-                currentMode.obj.accelerate();
+                amphi.set("setWheelsRadius", ($(this).val() > 0) ?  $(this).val() : 0);
+                amphi.accelerate();
                 refreshInfoBox();
             })
 
